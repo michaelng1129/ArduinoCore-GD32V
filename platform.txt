@@ -42,7 +42,7 @@ compiler.c.elf.flags={compiler.c.elf.flags} -I{build.sdk.rom.path}
 compiler.cpp.elf.flags={compiler.c.elf.flags}
 
 # Defines
-build.extra_flags=-D{build.board} {build.variant.build.extra_flags}
+build.extra_flags=-D{build.board}
 compiler.cpp.extra_flags={build.extra_flags} -DARDUINO=10810 -DARDUINO_{build.board} -DARDUINO_ARCH_GD32VW55X
 
 # Linker - uses variant ldscript with MBL compatible offset (RE_IMG_0_OFFSET + IMG_OVERHEAD_LEN)
