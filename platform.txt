@@ -1,0 +1,71 @@
+# Arduino platform.txt for GD32VW55x
+# Structure: cores/arduino/ + system/gd32vw55x/ + variants/
+# All comments in English as requested
+
+name=GD32VW55x Arduino Core
+version=0.1.0
+
+# Compiler - Nuclei RISC-V GCC
+compiler.path={runtime.tools.riscv-nuclei-elf-gcc.path}/bin/
+compiler.c.cmd=riscv-nuclei-elf-gcc
+compiler.c.flags=-c -g -Os -w -march=rv32imac -mabi=ilp32 -mcmodel=medlow -mno-save-restore -msmall-data-limit=8 -ffunction-sections -fdata-sections -Wall -Wextra -Wno-unused-parameter -MMD
+compiler.cpp.cmd=riscv-nuclei-elf-g++
+compiler.cpp.flags=-c -g -Os -w -march=rv32imac -mabi=ilp32 -mcmodel=medlow -mno-save-restore -msmall-data-limit=8 -ffunction-sections -fdata-sections -fpermissive -fno-exceptions -fno-rtti -std=gnu++17 -MMD
+compiler.S.cmd=riscv-nuclei-elf-gcc
+compiler.S.flags=-c -g -x assembler-with-cpp -march=rv32imac -mabi=ilp32 -mcmodel=medlow
+compiler.ar.cmd=riscv-nuclei-elf-ar
+compiler.ar.flags=rcs
+compiler.elf2bin.cmd=riscv-nuclei-elf-objcopy
+compiler.elf2bin.flags=-O binary
+compiler.size.cmd=riscv-nuclei-elf-size
+
+# System paths - SDK now directly under system/gd32vw55x/
+build.system.path={runtime.platform.path}/system/gd32vw55x
+build.sdk.msdk.path={build.system.path}/MSDK
+build.sdk.mbl.path={build.system.path}/MBL
+build.sdk.config.path={build.system.path}/config
+build.sdk.rom.path={build.system.path}/ROM-EXPORT
+
+# Include paths
+compiler.c.elf.flags={compiler.c.flags} -I{runtime.platform.path}/cores/{build.core}
+compiler.c.elf.flags={compiler.c.elf.flags} -I{runtime.platform.path}/variants/{build.variant}
+compiler.c.elf.flags={compiler.c.elf.flags} -I{build.sdk.config.path}
+compiler.c.elf.flags={compiler.c.elf.flags} -I{build.sdk.msdk.path}/app
+compiler.c.elf.flags={compiler.c.elf.flags} -I{build.sdk.msdk.path}/plf/inc
+compiler.c.elf.flags={compiler.c.elf.flags} -I{build.sdk.msdk.path}/plf/src
+compiler.c.elf.flags={compiler.c.elf.flags} -I{build.sdk.msdk.path}/plf/src/uart
+compiler.c.elf.flags={compiler.c.elf.flags} -I{build.sdk.msdk.path}/plf/riscv
+compiler.c.elf.flags={compiler.c.elf.flags} -I{build.sdk.msdk.path}/rtos/FreeRTOS/Source/include
+compiler.c.elf.flags={compiler.c.elf.flags} -I{build.sdk.msdk.path}/rtos/FreeRTOS/Source/portable/GCC/RISC-V
+compiler.c.elf.flags={compiler.c.elf.flags} -I{build.sdk.msdk.path}/rtos/rtos_wrapper
+compiler.c.elf.flags={compiler.c.elf.flags} -I{build.sdk.rom.path}
+compiler.cpp.elf.flags={compiler.c.elf.flags}
+
+# Defines
+build.extra_flags=-D{build.board} {build.variant.build.extra_flags}
+compiler.cpp.extra_flags={build.extra_flags} -DARDUINO=10810 -DARDUINO_{build.board} -DARDUINO_ARCH_GD32VW55X
+
+# Linker - uses variant ldscript with MBL compatible offset (RE_IMG_0_OFFSET + IMG_OVERHEAD_LEN)
+compiler.ldscript={runtime.platform.path}/variants/{build.variant}/{build.ldscript}
+compiler.ldflags=-T{compiler.ldscript} -march=rv32imac -mabi=ilp32 -mcmodel=medlow -nostartfiles -Wl,--gc-sections -Wl,--no-warn-rwx-segments -Wl,-Map,{build.path}/{build.project_name}.map
+
+# Libraries
+compiler.libraries.ldflags=-L{build.sdk.msdk.path}/lib -L{build.sdk.msdk.path}/plf/lib -lwifi -lrf -lble -lwpas -lmbedtls -lm -lgcc
+
+# Recipes
+recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} {compiler.c.extra_flags} {build.extra_flags} {compiler.c.elf.flags} -o "{build.path}/{object_file}" "{source_file}"
+recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} {compiler.cpp.extra_flags} {build.extra_flags} {compiler.cpp.elf.flags} -o "{build.path}/{object_file}" "{source_file}"
+recipe.S.o.pattern="{compiler.path}{compiler.S.cmd}" {compiler.S.flags} {build.extra_flags} {compiler.c.elf.flags} -o "{build.path}/{object_file}" "{source_file}"
+recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} "{build.path}/{archive_file}" {object_files}
+recipe.c.combine.pattern="{compiler.path}{compiler.c.cmd}" -o "{build.path}/{build.project_name}.elf" {object_files} "{build.path}/{archive_file}" {compiler.ldflags} {compiler.libraries.ldflags}
+recipe.objcopy.bin.pattern="{compiler.path}{compiler.elf2bin.cmd}" {compiler.elf2bin.flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.bin"
+recipe.size.pattern="{compiler.path}{compiler.size.cmd}" -B "{build.path}/{build.project_name}.elf"
+recipe.size.regex=^(?:\.text|\.data|\.rodata|\.bss)\s+[0-9]+
+recipe.size.regex.data=^\.data\s+([0-9]+)
+recipe.size.regex.bss=^\.bss\s+([0-9]+)
+
+# Upload via OpenOCD
+tools.openocd.path={runtime.tools.openocd.path}/bin/
+tools.openocd.cmd.path={path}/openocd
+tools.openocd.upload.params.verbose=-d1
+tools.openocd.upload.pattern="{cmd.path}" {upload.params.verbose} -f interface/cmsis-dap.cfg -f target/gd32vw55x.cfg -c "program {build.path}/{build.project_name}.bin verify reset exit 0x08000000"
