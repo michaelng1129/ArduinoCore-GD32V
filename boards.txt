@@ -1,82 +1,68 @@
 # Arduino boards.txt for GD32VW55x - English comments
-# Structure: cores/arduino/ + system/gd32vw55x/ + variants/
-# IC has 4 versions: 2M/4M x 21GPIO (K) / 28GPIO (H)
+# Structure: cores/arduino/ + system/gd32vw55x/ + variants/ (2 variants for pin mapping)
+# Flash size is a menu, like ESP32 does for 4M/8M/16M - not separate variants
 
 # ------------------------------------------------------------
-# Common VID/PID note: These are placeholder values for GD-Link CMSIS-DAP
-# Actual VID/PID should be verified via lsusb / Device Manager
-# GD-Link typically uses 0x28E9:0x0189 for K, 0x28E9:0x018A for H is just example
-# User should update after checking actual board
+# Menu definition for Flash Size - similar to ESP32
 # ------------------------------------------------------------
+menu.flash=Flash Size
+menu.flash.4m=4M (Default)
+menu.flash.4m.build.flash_size=4194304
+menu.flash.2m=2M
+menu.flash.2m.build.flash_size=2097152
 
-# K-START 2M - 21 GPIOs, 2MB Flash (GD32VW553K1/K2)
-gd32vw553k_start_2m.name=GD32VW553K-START (2M, 21 GPIOs)
-gd32vw553k_start_2m.vid.0=0x28E9
-gd32vw553k_start_2m.pid.0=0x0189
-gd32vw553k_start_2m.build.mcu=gd32vw55x
-gd32vw553k_start_2m.build.f_cpu=160000000L
-gd32vw553k_start_2m.build.board=GD32VW553K_START
-gd32vw553k_start_2m.build.core=arduino
-gd32vw553k_start_2m.build.variant=gd32vw553k_start
-gd32vw553k_start_2m.build.system.path=system/gd32vw55x
-gd32vw553k_start_2m.build.extra_flags=-DGD32VW553K_START -DBOARD_START -DFLASH_2M -DUSE_STDPERIPH_DRIVER
-gd32vw553k_start_2m.build.ldscript=ldscript.ld
-gd32vw553k_start_2m.build.flash_size=2097152
-gd32vw553k_start_2m.upload.tool=openocd
-gd32vw553k_start_2m.upload.protocol=cmsis-dap
-gd32vw553k_start_2m.upload.maximum_size=2097152
-gd32vw553k_start_2m.upload.maximum_data_size=294912
+# ------------------------------------------------------------
+# GD32VW553K-START - QFN32, 21 GPIOs - K version
+# ------------------------------------------------------------
+gd32vw553k_start.name=GD32VW553K-START
+gd32vw553k_start.vid.0=0x28E9
+gd32vw553k_start.pid.0=0x0189
 
-# K-START 4M - Default, 21 GPIOs, 4MB Flash (GD32VW553K0/K4)
-gd32vw553k_start_4m.name=GD32VW553K-START (4M, 21 GPIOs)
-gd32vw553k_start_4m.vid.0=0x28E9
-gd32vw553k_start_4m.pid.0=0x0189
-gd32vw553k_start_4m.build.mcu=gd32vw55x
-gd32vw553k_start_4m.build.f_cpu=160000000L
-gd32vw553k_start_4m.build.board=GD32VW553K_START
-gd32vw553k_start_4m.build.core=arduino
-gd32vw553k_start_4m.build.variant=gd32vw553k_start_4m
-gd32vw553k_start_4m.build.system.path=system/gd32vw55x
-gd32vw553k_start_4m.build.extra_flags=-DGD32VW553K_START -DBOARD_START -DFLASH_4M -DUSE_STDPERIPH_DRIVER
-gd32vw553k_start_4m.build.ldscript=ldscript.ld
-gd32vw553k_start_4m.build.flash_size=4194304
-gd32vw553k_start_4m.upload.tool=openocd
-gd32vw553k_start_4m.upload.protocol=cmsis-dap
-gd32vw553k_start_4m.upload.maximum_size=4194304
-gd32vw553k_start_4m.upload.maximum_data_size=294912
+gd32vw553k_start.build.mcu=gd32vw55x
+gd32vw553k_start.build.f_cpu=160000000L
+gd32vw553k_start.build.board=GD32VW553K_START
+gd32vw553k_start.build.core=arduino
+gd32vw553k_start.build.variant=gd32vw553k_start
+gd32vw553k_start.build.system.path=system/gd32vw55x
+gd32vw553k_start.build.extra_flags=-DGD32VW553K_START -DBOARD_START -DUSE_STDPERIPH_DRIVER
+gd32vw553k_start.build.ldscript=ldscript.ld
+gd32vw553k_start.upload.tool=openocd
+gd32vw553k_start.upload.maximum_size=4194304
+gd32vw553k_start.upload.maximum_data_size=294912
 
-# H-EVAL 2M - 28 GPIOs, 2MB Flash (GD32VW553H1/H2)
-gd32vw553h_eval_2m.name=GD32VW553H-EVAL (2M, 28 GPIOs)
-gd32vw553h_eval_2m.vid.0=0x28E9
-gd32vw553h_eval_2m.pid.0=0x018A
-gd32vw553h_eval_2m.build.mcu=gd32vw55x
-gd32vw553h_eval_2m.build.f_cpu=160000000L
-gd32vw553h_eval_2m.build.board=GD32VW553H_eval
-gd32vw553h_eval_2m.build.core=arduino
-gd32vw553h_eval_2m.build.variant=gd32vw553h_eval
-gd32vw553h_eval_2m.build.system.path=system/gd32vw55x
-gd32vw553h_eval_2m.build.extra_flags=-DGD32VW553H_eval -DBOARD_eval -DFLASH_2M -DUSE_STDPERIPH_DRIVER
-gd32vw553h_eval_2m.build.ldscript=ldscript.ld
-gd32vw553h_eval_2m.build.flash_size=2097152
-gd32vw553h_eval_2m.upload.tool=openocd
-gd32vw553h_eval_2m.upload.protocol=cmsis-dap
-gd32vw553h_eval_2m.upload.maximum_size=2097152
-gd32vw553h_eval_2m.upload.maximum_data_size=294912
+# Flash menu for K-START
+gd32vw553k_start.menu.flash.4m.build.extra_flags=-DFLASH_4M
+gd32vw553k_start.menu.flash.4m.build.ldscript=ldscript.ld
+gd32vw553k_start.menu.flash.4m.upload.maximum_size=4194304
 
-# H-EVAL 4M - Default, 28 GPIOs, 4MB Flash (GD32VW553H0/H4)
-gd32vw553h_eval_4m.name=GD32VW553H-EVAL (4M, 28 GPIOs)
-gd32vw553h_eval_4m.vid.0=0x28E9
-gd32vw553h_eval_4m.pid.0=0x018A
-gd32vw553h_eval_4m.build.mcu=gd32vw55x
-gd32vw553h_eval_4m.build.f_cpu=160000000L
-gd32vw553h_eval_4m.build.board=GD32VW553H_eval
-gd32vw553h_eval_4m.build.core=arduino
-gd32vw553h_eval_4m.build.variant=gd32vw553h_eval_4m
-gd32vw553h_eval_4m.build.system.path=system/gd32vw55x
-gd32vw553h_eval_4m.build.extra_flags=-DGD32VW553H_eval -DBOARD_eval -DFLASH_4M -DUSE_STDPERIPH_DRIVER
-gd32vw553h_eval_4m.build.ldscript=ldscript.ld
-gd32vw553h_eval_4m.build.flash_size=4194304
-gd32vw553h_eval_4m.upload.tool=openocd
-gd32vw553h_eval_4m.upload.protocol=cmsis-dap
-gd32vw553h_eval_4m.upload.maximum_size=4194304
-gd32vw553h_eval_4m.upload.maximum_data_size=294912
+gd32vw553k_start.menu.flash.2m.build.extra_flags=-DFLASH_2M
+gd32vw553k_start.menu.flash.2m.build.ldscript=ldscript_2m.ld
+gd32vw553k_start.menu.flash.2m.upload.maximum_size=2097152
+
+# ------------------------------------------------------------
+# GD32VW553H-START - QFN40, 28 GPIOs - H version
+# ------------------------------------------------------------
+gd32vw553h_start.name=GD32VW553H-START
+gd32vw553h_start.vid.0=0x28E9
+gd32vw553h_start.pid.0=0x018A
+
+gd32vw553h_start.build.mcu=gd32vw55x
+gd32vw553h_start.build.f_cpu=160000000L
+gd32vw553h_start.build.board=GD32VW553H_START
+gd32vw553h_start.build.core=arduino
+gd32vw553h_start.build.variant=gd32vw553h_start
+gd32vw553h_start.build.system.path=system/gd32vw55x
+gd32vw553h_start.build.extra_flags=-DGD32VW553H_START -DBOARD_START -DUSE_STDPERIPH_DRIVER
+gd32vw553h_start.build.ldscript=ldscript.ld
+gd32vw553h_start.upload.tool=openocd
+gd32vw553h_start.upload.maximum_size=4194304
+gd32vw553h_start.upload.maximum_data_size=294912
+
+# Flash menu for H-START
+gd32vw553h_start.menu.flash.4m.build.extra_flags=-DFLASH_4M
+gd32vw553h_start.menu.flash.4m.build.ldscript=ldscript.ld
+gd32vw553h_start.menu.flash.4m.upload.maximum_size=4194304
+
+gd32vw553h_start.menu.flash.2m.build.extra_flags=-DFLASH_2M
+gd32vw553h_start.menu.flash.2m.build.ldscript=ldscript_2m.ld
+gd32vw553h_start.menu.flash.2m.upload.maximum_size=2097152
