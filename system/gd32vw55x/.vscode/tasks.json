@@ -1,0 +1,302 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build MSDK",
+            "type": "shell",
+            "args": [
+                "app",
+                "msdk"
+            ],
+            "windows": {
+                "command": "${workspaceFolder}/cmake_build.bat"
+            },
+            "linux": {
+                "command": "${workspaceFolder}/cmake_build.sh"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "Build MBL",
+            "type": "shell",
+            "args": [
+                "app",
+                "mbl"
+            ],
+            "windows": {
+                "command": "${workspaceFolder}/cmake_build.bat"
+            },
+            "linux": {
+                "command": "${workspaceFolder}/cmake_build.sh"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "Build ALL",
+            "type": "shell",
+            "args": [
+                "app"
+            ],
+            "windows": {
+                "command": "${workspaceFolder}/cmake_build.bat"
+            },
+            "linux": {
+                "command": "${workspaceFolder}/cmake_build.sh"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "Clean ALL",
+            "type": "shell",
+            "args": [
+                "app",
+                "clean"
+            ],
+            "windows": {
+                "command": "${workspaceFolder}/cmake_build.bat"
+            },
+            "linux": {
+                "command": "${workspaceFolder}/cmake_build.sh"
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "Download MSDK (GDLink)",
+            "type": "shell",
+            "args": ["MSDK", "GDLink"],
+            "windows": {
+                "command": "${workspaceFolder}/.vscode/download.bat"
+            },
+            "linux": {
+                "command": "${workspaceFolder}/.vscode/download.sh"
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Download MBL (GDLink)",
+            "type": "shell",
+            "args": ["MBL", "GDLink"],
+            "windows": {
+                "command": "${workspaceFolder}/.vscode/download.bat"
+            },
+            "linux": {
+                "command": "${workspaceFolder}/.vscode/download.sh"
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Download ALL (GDLink)",
+            "type": "shell",
+            "args": ["ALL", "GDLink"],
+            "windows": {
+                "command": "${workspaceFolder}/.vscode/download.bat"
+            },
+            "linux": {
+                "command": "${workspaceFolder}/.vscode/download.sh"
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Download MSDK (JLink)",
+            "type": "shell",
+            "args": ["MSDK", "JLink"],
+            "windows": {
+                "command": "${workspaceFolder}/.vscode/download.bat"
+            },
+            "linux": {
+                "command": "${workspaceFolder}/.vscode/download.sh"
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Download MBL (JLink)",
+            "type": "shell",
+            "args": ["MBL", "JLink"],
+            "windows": {
+                "command": "${workspaceFolder}/.vscode/download.bat"
+            },
+            "linux": {
+                "command": "${workspaceFolder}/.vscode/download.sh"
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Download ALL (JLink)",
+            "type": "shell",
+            "args": ["ALL", "JLink"],
+            "windows": {
+                "command": "${workspaceFolder}/.vscode/download.bat"
+            },
+            "linux": {
+                "command": "${workspaceFolder}/.vscode/download.sh"
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Start OpenOCD (GDLink)",
+            "type": "process",
+            "windows": {
+                "command": "${workspaceFolder}/tools/xpack-openocd-0.11.0-3_windows/bin/openocd.exe",
+                "args": [
+                    "-f",
+                    "${workspaceFolder}/MSDK/projects/eclipse/msdk/openocd_gdlink.cfg"
+                ]
+            },
+            "linux": {
+                "command": "${workspaceFolder}/tools/xpack-openocd-0.11.0-3_linux/bin/openocd",
+                "args": [
+                    "-f",
+                    "${workspaceFolder}/MSDK/projects/eclipse/msdk/openocd_gdlink.cfg"
+                ]
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "isBackground": true,
+            "problemMatcher": {
+                "pattern": {
+                    "regexp": "^.*$",
+                    "file": 1,
+                    "location": 2,
+                    "message": 3
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^.*Open On-Chip Debugger.*",
+                    "endsPattern": "^.*Listening on port.*"
+                }
+            }
+        },
+        {
+            "label": "Start OpenOCD (JLink)",
+            "type": "process",
+            "windows": {
+                "command": "${workspaceFolder}/tools/xpack-openocd-0.11.0-3_windows/bin/openocd.exe",
+                "args": [
+                    "-f",
+                    "${workspaceFolder}/MSDK/projects/eclipse/msdk/openocd_jlink.cfg"
+                ]
+            },
+            "linux": {
+                "command": "${workspaceFolder}/tools/xpack-openocd-0.11.0-3_linux/bin/openocd",
+                "args": [
+                    "-f",
+                    "${workspaceFolder}/MSDK/projects/eclipse/msdk/openocd_jlink.cfg"
+                ]
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "isBackground": true,
+            "problemMatcher": {
+                "pattern": {
+                    "regexp": "^.*$",
+                    "file": 1,
+                    "location": 2,
+                    "message": 3
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^.*Open On-Chip Debugger.*",
+                    "endsPattern": "^.*Listening on port.*"
+                }
+            }
+        }
+    ]
+}

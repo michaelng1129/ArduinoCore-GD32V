@@ -1,0 +1,26 @@
+{
+    "C_Cpp.default.cStandard": "c11",
+    "C_Cpp.default.cppStandard": "c++11",
+    "C_Cpp.errorSquiggles": "enabled",
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/cmake_build": false,
+        "**/build": true
+    },
+    "search.exclude": {
+        "**/.git": true,
+        "**/cmake_build": true,
+        "**/build": true,
+        "**/node_modules": true
+    },
+    "[c]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    },
+    "[cpp]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    }
+}

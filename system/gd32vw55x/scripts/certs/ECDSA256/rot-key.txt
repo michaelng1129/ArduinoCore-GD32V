@@ -1,0 +1,17 @@
+-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEH5bLKOQjd7SW0/0REx9/7y9VuGgJ
+KfVltlloevetqAsR1y87eu5LHhoqcBI76xcVVysXENfCcljEvFHFyhV0EQ==
+-----END PUBLIC KEY-----
+Private-Key: (256 bit)
+priv:
+    44:a6:c0:e9:95:79:e1:66:f3:bd:27:a6:0d:6f:20:
+    a6:16:00:5d:6c:00:69:7e:93:53:0b:ac:c4:98:f8:
+    a5:06
+pub:
+    04:1f:96:cb:28:e4:23:77:b4:96:d3:fd:11:13:1f:
+    7f:ef:2f:55:b8:68:09:29:f5:65:b6:59:68:7a:f7:
+    ad:a8:0b:11:d7:2f:3b:7a:ee:4b:1e:1a:2a:70:12:
+    3b:eb:17:15:57:2b:17:10:d7:c2:72:58:c4:bc:51:
+    c5:ca:15:74:11
+ASN1 OID: prime256v1
+NIST CURVE: P-256

@@ -1,0 +1,318 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Cortex-Debug GDLink",
+            "type": "cortex-debug",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/MBL/project/cmake/bin/MBL.elf",
+            "gdbPath": "${workspaceFolder}/tools/gd32vw55x_toolchain_windows/bin/riscv-nuclei-elf-gdb.exe",
+            "servertype": "external",
+            "gdbTarget": "localhost:3333",
+            "preLaunchTask": "Start OpenOCD (GDLink)",
+            "svdFile": "${workspaceFolder}/MSDK/projects/cmake/GD32VW553x.svd",
+            "symbolFiles": [
+                "${workspaceFolder}/MSDK/projects/cmake/output/bin/MSDK.elf"
+            ],
+            "loadFiles": [],
+            "preLaunchCommands": [
+                "set mem inaccessible-by-default off",
+                "set arch riscv:rv32"
+            ],
+            "postLaunchCommands": [
+                "monitor reset halt",
+                "directory \"${workspaceFolder}\"",
+                "info files"
+            ],
+            "showDevDebugOutput": "raw"
+        },
+        {
+            "name": "Cortex-Debug JLink",
+            "type": "cortex-debug",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/MBL/project/cmake/bin/MBL.elf",
+            "gdbPath": "${workspaceFolder}/tools/gd32vw55x_toolchain_windows/bin/riscv-nuclei-elf-gdb.exe",
+            "servertype": "external",
+            "gdbTarget": "localhost:3333",
+            "preLaunchTask": "Start OpenOCD (JLink)",
+            "svdFile": "${workspaceFolder}/MSDK/projects/cmake/GD32VW553x.svd",
+            "symbolFiles": [
+                "${workspaceFolder}/MSDK/projects/cmake/output/bin/MSDK.elf"
+            ],
+            "loadFiles": [],
+            "preLaunchCommands": [
+                "set mem inaccessible-by-default off",
+                "set arch riscv:rv32"
+            ],
+            "postLaunchCommands": [
+                "monitor reset halt",
+                "directory \"${workspaceFolder}\"",
+                "info files"
+            ],
+            "showDevDebugOutput": "raw"
+        },
+        {
+            "name": "GDB GDLink",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}\\MBL\\project\\cmake\\bin\\MBL.elf",
+            "cwd": "${workspaceFolder}",
+            "MIMode": "gdb",
+            "miDebuggerPath": "${workspaceFolder}\\tools\\gd32vw55x_toolchain_windows\\bin\\riscv-nuclei-elf-gdb.exe",
+            "hardwareBreakpoints": {
+                "require": true,
+                "limit": 8
+            },
+            "stopAtEntry": false,
+            "preLaunchTask": "Start OpenOCD (GDLink)",
+            "setupCommands": [
+                {
+                    "description": "设置内存访问",
+                    "text": "set mem inaccessible-by-default off",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "连接远程",
+                    "text": "target remote localhost:3333",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "设置架构",
+                    "text": "set arch riscv:rv32",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "复位并停住目标",
+                    "text": "monitor reset halt",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "切换到工作目录",
+                    "text": "cd ${workspaceFolder}",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "加载MBL符号表",
+                    "text": "file MBL/project/cmake/bin/MBL.elf",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "加载MSDK符号表",
+                    //"text": "add-symbol-file MSDK/projects/cmake/output/bin/MSDK.elf 0x0800B400 -s .init 0x0800A000 -s .code_to_sram 0x20000200 -s .data 0x200012F8",
+                    "text": "add-symbol-file MSDK/projects/cmake/output/bin/MSDK.elf",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "添加源文件搜索路径",
+                    "text": "directory \"${workspaceFolder}\"",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "显示已加载的符号文件路径",
+                    "text": "info files",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "GDB JLink",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}\\MBL\\project\\cmake\\bin\\MBL.elf",
+            "cwd": "${workspaceFolder}",
+            "MIMode": "gdb",
+            "miDebuggerPath": "${workspaceFolder}\\tools\\gd32vw55x_toolchain_windows\\bin\\riscv-nuclei-elf-gdb.exe",
+            "hardwareBreakpoints": {
+                "require": true,
+                "limit": 8
+            },
+            "stopAtEntry": false,
+            "preLaunchTask": "Start OpenOCD (JLink)",
+            "setupCommands": [
+                {
+                    "description": "设置内存访问",
+                    "text": "set mem inaccessible-by-default off",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "连接远程",
+                    "text": "target remote localhost:3333",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "设置架构",
+                    "text": "set arch riscv:rv32",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "复位并停住目标",
+                    "text": "monitor reset halt",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "切换到工作目录",
+                    "text": "cd ${workspaceFolder}",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "加载MBL符号表",
+                    "text": "file MBL/project/cmake/bin/MBL.elf",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "加载MSDK符号表",
+                    //"text": "add-symbol-file MSDK/projects/cmake/output/bin/MSDK.elf 0x0800B400 -s .init 0x0800A000 -s .code_to_sram 0x20000200 -s .data 0x200012F8",
+                    "text": "add-symbol-file MSDK/projects/cmake/output/bin/MSDK.elf",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "添加源文件搜索路径",
+                    "text": "directory \"${workspaceFolder}\"",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "显示已加载的符号文件路径",
+                    "text": "info files",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "GDB GDLink with Download",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}\\MBL\\project\\cmake\\bin\\MBL.elf",
+            "cwd": "${workspaceFolder}",
+            "MIMode": "gdb",
+            "miDebuggerPath": "${workspaceFolder}\\tools\\gd32vw55x_toolchain_windows\\bin\\riscv-nuclei-elf-gdb.exe",
+            "hardwareBreakpoints": {
+                "require": true,
+                "limit": 8
+            },
+            "stopAtEntry": false,
+            "preLaunchTask": "Start OpenOCD (GDLink)",
+            "setupCommands": [
+                {
+                    "description": "设置内存访问",
+                    "text": "set mem inaccessible-by-default off",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "连接远程",
+                    "text": "target remote localhost:3333",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "设置架构",
+                    "text": "set arch riscv:rv32",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "复位并停住目标",
+                    "text": "monitor reset halt",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "加载MSDK程序到Flash",
+                    "text": "load MSDK/projects/cmake/output/bin/MSDK.elf",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "切换到工作目录",
+                    "text": "cd ${workspaceFolder}",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "加载MBL符号表",
+                    "text": "file MBL/project/cmake/bin/MBL.elf",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "加载MSDK符号表",
+                    "text": "add-symbol-file MSDK/projects/cmake/output/bin/MSDK.elf",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "添加源文件搜索路径",
+                    "text": "directory \"${workspaceFolder}\"",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "显示已加载的符号文件路径",
+                    "text": "info files",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "GDB JLink with Download",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}\\MBL\\project\\cmake\\bin\\MBL.elf",
+            "cwd": "${workspaceFolder}",
+            "MIMode": "gdb",
+            "miDebuggerPath": "${workspaceFolder}\\tools\\gd32vw55x_toolchain_windows\\bin\\riscv-nuclei-elf-gdb.exe",
+            "hardwareBreakpoints": {
+                "require": true,
+                "limit": 8
+            },
+            "stopAtEntry": false,
+            "preLaunchTask": "Start OpenOCD (JLink)",
+            "setupCommands": [
+                {
+                    "description": "设置内存访问",
+                    "text": "set mem inaccessible-by-default off",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "连接远程",
+                    "text": "target remote localhost:3333",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "设置架构",
+                    "text": "set arch riscv:rv32",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "复位并停住目标",
+                    "text": "monitor reset halt",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "加载MSDK程序到Flash",
+                    "text": "load MSDK/projects/cmake/output/bin/MSDK.elf",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "切换到工作目录",
+                    "text": "cd ${workspaceFolder}",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "加载MBL符号表",
+                    "text": "file MBL/project/cmake/bin/MBL.elf",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "加载MSDK符号表",
+                    "text": "add-symbol-file MSDK/projects/cmake/output/bin/MSDK.elf",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "添加源文件搜索路径",
+                    "text": "directory \"${workspaceFolder}\"",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "显示已加载的符号文件路径",
+                    "text": "info files",
+                    "ignoreFailures": true
+                }
+            ]
+        }
+    ]
+}
+

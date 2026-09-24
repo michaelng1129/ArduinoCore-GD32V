@@ -1,0 +1,39 @@
+Certificate:
+    Data:
+        Version: 1 (0x0)
+        Serial Number:
+            77:34:dc:70:be:52:cb:29:fa:a3:0a:b6:05:06:f9:ea:5e:c6:e0:31
+        Signature Algorithm: ecdsa-with-SHA256
+        Issuer: C = CN, ST = JiangSu, L = Suzhou, O = Internet Widgits Pty Ltd, CN = www.gigadevice.com
+        Validity
+            Not Before: Jun 28 01:59:09 2022 GMT
+            Not After : Jun 25 01:59:09 2032 GMT
+        Subject: C = CN, ST = JiangSu, L = Suzhou, O = Internet Widgits Pty Ltd, CN = www.gigadevice.com
+        Subject Public Key Info:
+            Public Key Algorithm: id-ecPublicKey
+                Public-Key: (256 bit)
+                pub:
+                    04:1f:96:cb:28:e4:23:77:b4:96:d3:fd:11:13:1f:
+                    7f:ef:2f:55:b8:68:09:29:f5:65:b6:59:68:7a:f7:
+                    ad:a8:0b:11:d7:2f:3b:7a:ee:4b:1e:1a:2a:70:12:
+                    3b:eb:17:15:57:2b:17:10:d7:c2:72:58:c4:bc:51:
+                    c5:ca:15:74:11
+                ASN1 OID: prime256v1
+                NIST CURVE: P-256
+    Signature Algorithm: ecdsa-with-SHA256
+         30:45:02:20:4f:4a:f9:7c:51:74:28:ca:2e:bb:6e:8e:97:a2:
+         0a:29:ea:cb:eb:4c:10:6e:0d:f3:73:1a:12:0a:1a:94:05:26:
+         02:21:00:ad:c6:b8:f4:a6:94:ee:1d:6d:4d:47:45:6c:c1:2d:
+         f9:e6:0e:63:ca:66:17:f4:7d:02:82:8d:09:94:8f:7f:cd
+-----BEGIN CERTIFICATE-----
+MIIB2zCCAYECFHc03HC+Ussp+qMKtgUG+epexuAxMAoGCCqGSM49BAMCMHAxCzAJ
+BgNVBAYTAkNOMRAwDgYDVQQIDAdKaWFuZ1N1MQ8wDQYDVQQHDAZTdXpob3UxITAf
+BgNVBAoMGEludGVybmV0IFdpZGdpdHMgUHR5IEx0ZDEbMBkGA1UEAwwSd3d3Lmdp
+Z2FkZXZpY2UuY29tMB4XDTIyMDYyODAxNTkwOVoXDTMyMDYyNTAxNTkwOVowcDEL
+MAkGA1UEBhMCQ04xEDAOBgNVBAgMB0ppYW5nU3UxDzANBgNVBAcMBlN1emhvdTEh
+MB8GA1UECgwYSW50ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMRswGQYDVQQDDBJ3d3cu
+Z2lnYWRldmljZS5jb20wWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQflsso5CN3
+tJbT/RETH3/vL1W4aAkp9WW2WWh6962oCxHXLzt67kseGipwEjvrFxVXKxcQ18Jy
+WMS8UcXKFXQRMAoGCCqGSM49BAMCA0gAMEUCIE9K+XxRdCjKLrtujpeiCinqy+tM
+EG4N83MaEgoalAUmAiEArca49KaU7h1tTUdFbMEt+eYOY8pmF/R9AoKNCZSPf80=
+-----END CERTIFICATE-----
