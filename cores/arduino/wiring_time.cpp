@@ -1,42 +1,62 @@
 #include "Arduino.h"
+#include "ArduinoPlatform.h"
 #include "FreeRTOS.h"
 #include "task.h"
-#include "core_feature_base.h"   // NMSIS: CSR read macros (RISC-V 標準)
-#include "core_feature_timer.h"  // NMSIS: SysTimer struct (Nuclei 擴充)
+#include "core_feature_base.h"
 
 extern "C" {
 
-void init(void) {
-    // RISC-V mcycle counter 從 reset 後就自動累加，不需要像 ARM DWT
-    // 那樣手動致能 TRCENA / CYCCNTENA，這裡不需要做任何事
+void init(void)
+{
 }
 
-unsigned long millis(void) {
-    return xTaskGetTickCount() * portTICK_PERIOD_MS;
+unsigned long millis(void)
+{
+    return (unsigned long)(arduinoPlatformMicros() / 1000ULL);
 }
 
-unsigned long micros(void) {
-    // 用 RISC-V 標準 CSR 讀取 mcycle（取代 ARM 的 DWT->CYCCNT）
-    uint32_t cycle = __RV_CSR_READ(CSR_MCYCLE);
-    return (unsigned long)(cycle / (SystemCoreClock / 1000000));
+unsigned long micros(void)
+{
+    return (unsigned long)arduinoPlatformMicros();
 }
 
-void delay(unsigned long ms) {
-    if (ms == 0) return;
-    vTaskDelay(pdMS_TO_TICKS(ms));
-}
+void delay(unsigned long milliseconds)
+{
+    if (milliseconds == 0UL) {
+        return;
+    }
 
-void delayMicroseconds(unsigned int us) {
-    if (us == 0) return;
-    uint32_t start = __RV_CSR_READ(CSR_MCYCLE);
-    uint32_t cycles = us * (SystemCoreClock / 1000000);
-    while ((__RV_CSR_READ(CSR_MCYCLE) - start) < cycles) {
-        __asm__ volatile ("nop");
+    uint64_t ticks = (((uint64_t)milliseconds * configTICK_RATE_HZ) + 999ULL) / 1000ULL;
+    if (ticks == 0ULL) {
+        ticks = 1ULL;
+    }
+
+    const uint64_t maxChunk = (uint64_t)portMAX_DELAY - 1ULL;
+    while (ticks > 0ULL) {
+        const TickType_t chunk = (TickType_t)(ticks > maxChunk ? maxChunk : ticks);
+        vTaskDelay(chunk);
+        ticks -= chunk;
     }
 }
 
-void yield(void) {
+void delayMicroseconds(unsigned int microseconds)
+{
+    arduinoPlatformDelayMicroseconds((uint32_t)microseconds);
+}
+
+void yield(void)
+{
     taskYIELD();
 }
 
-} // extern C
+void noInterrupts(void)
+{
+    __disable_irq();
+}
+
+void interrupts(void)
+{
+    __enable_irq();
+}
+
+}

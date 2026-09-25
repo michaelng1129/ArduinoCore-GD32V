@@ -1,5 +1,5 @@
 # Arduino boards.txt for GD32VW55x - English comments
-# Structure: cores/arduino/ + system/gd32vw55x/ + variants/ (2 variants for pin mapping)
+# Structure: cores/arduino/ + system/gd32vw55x/sdk/ + variants/ (2 board pin mappings)
 
 # ------------------------------------------------------------
 # Menu definition for Flash Size - similar to ESP32
@@ -22,21 +22,21 @@ gd32vw553_start.build.f_cpu=160000000L
 gd32vw553_start.build.board=GD32VW553_START
 gd32vw553_start.build.core=arduino
 gd32vw553_start.build.variant=gd32vw553_start
-gd32vw553_start.build.system.path=system/gd32vw55x
-gd32vw553_start.build.extra_flags=-DGD32VW553_START -DBOARD_START -DUSE_STDPERIPH_DRIVER
+gd32vw553_start.build.system.path={runtime.platform.path}/system/gd32vw55x/sdk
+gd32vw553_start.build.extra_flags=-DGD32VW553_START -DBOARD_START -DCONFIG_BOARD=1 -DCONFIG_ARDUINO_CORE -DUSE_STDPERIPH_DRIVER
 gd32vw553_start.build.ldscript=ldscript.ld
 gd32vw553_start.upload.tool=openocd
-gd32vw553_start.upload.maximum_size=4194304
-gd32vw553_start.upload.maximum_data_size=294912
+gd32vw553_start.upload.maximum_size=4153344
+gd32vw553_start.upload.maximum_data_size=294400
 
 # Flash menu for K-START
-gd32vw553_start.menu.flash.4m.build.extra_flags=-DFLASH_4M
+gd32vw553_start.menu.flash.4m.build.extra_flags=-DGD32VW553_START -DBOARD_START -DCONFIG_BOARD=1 -DCONFIG_ARDUINO_CORE -DUSE_STDPERIPH_DRIVER -DFLASH_4M
 gd32vw553_start.menu.flash.4m.build.ldscript=ldscript.ld
-gd32vw553_start.menu.flash.4m.upload.maximum_size=4194304
+gd32vw553_start.menu.flash.4m.upload.maximum_size=4153344
 
-gd32vw553_start.menu.flash.2m.build.extra_flags=-DFLASH_2M
+gd32vw553_start.menu.flash.2m.build.extra_flags=-DGD32VW553_START -DBOARD_START -DCONFIG_BOARD=1 -DCONFIG_ARDUINO_CORE -DUSE_STDPERIPH_DRIVER -DFLASH_2M
 gd32vw553_start.menu.flash.2m.build.ldscript=ldscript_2m.ld
-gd32vw553_start.menu.flash.2m.upload.maximum_size=2097152
+gd32vw553_start.menu.flash.2m.upload.maximum_size=2056192
 
 # ------------------------------------------------------------
 # GD32VW553-EVAL - QFN40, 28 GPIOs - H version
@@ -50,18 +50,18 @@ gd32vw553_eval.build.f_cpu=160000000L
 gd32vw553_eval.build.board=GD32VW553_EVAL
 gd32vw553_eval.build.core=arduino
 gd32vw553_eval.build.variant=gd32vw553_eval
-gd32vw553_eval.build.system.path=system/gd32vw55x
-gd32vw553_eval.build.extra_flags=-DGD32VW553_EVAL -DBOARD_EVAL -DUSE_STDPERIPH_DRIVER
+gd32vw553_eval.build.system.path={runtime.platform.path}/system/gd32vw55x/sdk
+gd32vw553_eval.build.extra_flags=-DGD32VW553_EVAL -DBOARD_EVAL -DCONFIG_BOARD=2 -DCONFIG_ARDUINO_CORE -DUSE_STDPERIPH_DRIVER
 gd32vw553_eval.build.ldscript=ldscript.ld
 gd32vw553_eval.upload.tool=openocd
-gd32vw553_eval.upload.maximum_size=4194304
-gd32vw553_eval.upload.maximum_data_size=294912
+gd32vw553_eval.upload.maximum_size=4153344
+gd32vw553_eval.upload.maximum_data_size=294400
 
 # Flash menu for H-EVAL
-gd32vw553_eval.menu.flash.4m.build.extra_flags=-DFLASH_4M
+gd32vw553_eval.menu.flash.4m.build.extra_flags=-DGD32VW553_EVAL -DBOARD_EVAL -DCONFIG_BOARD=2 -DCONFIG_ARDUINO_CORE -DUSE_STDPERIPH_DRIVER -DFLASH_4M
 gd32vw553_eval.menu.flash.4m.build.ldscript=ldscript.ld
-gd32vw553_eval.menu.flash.4m.upload.maximum_size=4194304
+gd32vw553_eval.menu.flash.4m.upload.maximum_size=4153344
 
-gd32vw553_eval.menu.flash.2m.build.extra_flags=-DFLASH_2M
+gd32vw553_eval.menu.flash.2m.build.extra_flags=-DGD32VW553_EVAL -DBOARD_EVAL -DCONFIG_BOARD=2 -DCONFIG_ARDUINO_CORE -DUSE_STDPERIPH_DRIVER -DFLASH_2M
 gd32vw553_eval.menu.flash.2m.build.ldscript=ldscript_2m.ld
-gd32vw553_eval.menu.flash.2m.upload.maximum_size=2097152
+gd32vw553_eval.menu.flash.2m.upload.maximum_size=2056192

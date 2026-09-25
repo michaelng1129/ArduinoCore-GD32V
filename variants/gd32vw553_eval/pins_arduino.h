@@ -7,7 +7,7 @@
 
 #define NUM_DIGITAL_PINS            28
 #define NUM_ANALOG_INPUTS           9
-#define NUM_ANALOG_OUTPUTS          0
+#define NUM_ANALOG_OUTPUTS          1
 
 // LEDs
 #define LED_BUILTIN                 2
@@ -17,10 +17,10 @@
 #define PIN_BUTTON                  0
 
 // UART - default Serial (PA8/PA9 for START board UART0)
-#define PIN_SERIAL_RX               9   // PA9
-#define PIN_SERIAL_TX               8   // PA8
-#define PIN_SERIAL1_RX              9
-#define PIN_SERIAL1_TX              8
+#define PIN_SERIAL_RX               1   // PA1 (USART0 RX)
+#define PIN_SERIAL_TX               0   // PA0 (USART0 TX)
+#define PIN_SERIAL1_RX              PIN_SERIAL_RX
+#define PIN_SERIAL1_TX              PIN_SERIAL_TX
 
 // SPI - SPI0 on PA4-PA7
 #define PIN_SPI_MISO                6   // PA6
@@ -29,19 +29,19 @@
 #define PIN_SPI_SS                  4   // PA4
 
 // I2C - I2C0 on PB6/PB7
-#define PIN_WIRE_SDA                19  // PB6 - H version has more pins
-#define PIN_WIRE_SCL                20  // PB7
+#define PIN_WIRE_SDA                16  // PB6
+#define PIN_WIRE_SCL                17  // PB7
 
 // Analog pins - PA0-PA3, PB0-PB1, PC0-PC2, etc - H has extra
 #define PIN_A0                      0   // PA0
 #define PIN_A1                      1   // PA1
 #define PIN_A2                      2   // PA2
 #define PIN_A3                      3   // PA3
-#define PIN_A4                      10  // PB0
-#define PIN_A5                      11  // PB1
-#define PIN_A6                      21  // PC0
-#define PIN_A7                      22  // PC1
-#define PIN_A8                      23  // PC2
+#define PIN_A4                      4   // PA4
+#define PIN_A5                      5   // PA5
+#define PIN_A6                      6   // PA6
+#define PIN_A7                      7   // PA7
+#define PIN_A8                      10  // PB0 (ADC_IN8)
 
 static const uint8_t A0 = PIN_A0;
 static const uint8_t A1 = PIN_A1;
@@ -54,8 +54,8 @@ static const uint8_t A7 = PIN_A7;
 static const uint8_t A8 = PIN_A8;
 
 // PWM capable pins
-#define digitalPinHasPWM(p)         ((p) < NUM_DIGITAL_PINS)
+#define digitalPinHasPWM(p)         ((p) == 0)  // PA0: TIMER1_CH0
 
-#define digitalPinToAnalogInput(p)  ((p) < NUM_ANALOG_INPUTS ? (p) : -1)
+#define digitalPinToAnalogInput(p)  ((p) < 8 ? (p) : ((p) == 10 ? 8 : -1))
 
 #endif /* _PINS_ARDUINO_H_ */

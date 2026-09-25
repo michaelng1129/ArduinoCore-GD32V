@@ -1,6 +1,7 @@
 #include "variant.h"
 #include "gd32vw55x_gpio.h"
 #include "gd32vw55x_rcu.h"
+#include "gd32vw55x_timer.h"
 
 // GD32VW553K-START - 21 GPIOs mapping
 // This mapping must match pins_arduino.h comments
@@ -34,6 +35,22 @@ const uint8_t g_pinMapSize = sizeof(g_pinMap)/sizeof(g_pinMap[0]);
 uint32_t getGpioPort(uint8_t pin) { return (pin < g_pinMapSize) ? g_pinMap[pin].port : 0; }
 uint32_t getGpioPin(uint8_t pin) { return (pin < g_pinMapSize) ? g_pinMap[pin].bit : 0; }
 uint32_t getRcuPeriph(uint8_t pin) { return (pin < g_pinMapSize) ? g_pinMap[pin].rcu : 0; }
+int getAdcChannel(uint8_t pin) { return pin < 8 ? pin : (pin == 10 ? 8 : -1); }
+
+bool getPwmPinMap(uint8_t pin, PwmPinMap *map)
+{
+    if (pin != 0 || map == nullptr) {
+        return false;
+    }
+
+    map->timer = TIMER1;
+    map->timerRcu = RCU_TIMER1;
+    map->period = 999U;
+    map->channel = TIMER_CH_0;
+    map->prescaler = 159U;
+    map->alternateFunction = GPIO_AF_1;
+    return true;
+}
 
 extern "C" void initVariant(void) {
     // Variant specific init, called from arduino task before setup()

@@ -1,21 +1,21 @@
-#include "config_gdm32.h"
-#include "mbl_region.h"
-#include "wlan_config.h"
-
 OUTPUT_ARCH( "riscv" )
 ENTRY( _start )
+
+__stack_size = DEFINED(__stack_size) ? __stack_size : 4K;
+__heap_size = DEFINED(__heap_size) ? __heap_size : 16K;
 
 MEMORY
 {
     /* Must keep MBL offset - official FLASH layout, required for OTA and secure boot */
-    flash (rxai!w) : ORIGIN = RE_FLASH_BASE + RE_IMG_0_OFFSET + IMG_OVERHEAD_LEN, LENGTH = RE_END_OFFSET - (RE_IMG_0_OFFSET + IMG_OVERHEAD_LEN)
+    flash (rxai!w) : ORIGIN = 0x0800A000, LENGTH = 0x3F6000
     /* SRAM layout: 0x20000200 reserved for ROM, 288K total */
-    ram   (wxa!ri) : ORIGIN = RE_SRAM_BASE + RE_IMG_DATA_START, LENGTH = (288K - RE_IMG_DATA_START)
+    ram   (wxa!ri) : ORIGIN = 0x20000200, LENGTH = 0x47E00
     mib   (ra!wxi) : ORIGIN = 0x40030800, LENGTH = 2K
 }
 
 SECTIONS
 {
+  .init : { _vector_base = .; KEEP (*(SORT_NONE(.init))) } >flash AT>flash
   /* Keep official code_to_sram - critical RF code must run in RAM */
   _sicode = LOADADDR(.code_to_sram);
   .code_to_sram :
