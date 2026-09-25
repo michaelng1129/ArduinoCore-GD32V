@@ -1,6 +1,5 @@
 # Arduino boards.txt for GD32VW55x - English comments
 # Structure: cores/arduino/ + system/gd32vw55x/ + variants/ (2 variants for pin mapping)
-# Flash size is a menu, like ESP32 does for 4M/8M/16M - not separate variants
 
 # ------------------------------------------------------------
 # Menu definition for Flash Size - similar to ESP32
@@ -12,57 +11,57 @@ menu.flash.2m=2M
 menu.flash.2m.build.flash_size=2097152
 
 # ------------------------------------------------------------
-# GD32VW553K-START - QFN32, 21 GPIOs - K version
+# GD32VW553-START - QFN32, 21 GPIOs - K version
 # ------------------------------------------------------------
-gd32vw553k_start.name=GD32VW553K-START
-gd32vw553k_start.vid.0=0x28E9
-gd32vw553k_start.pid.0=0x0189
+gd32vw553_start.name=GD32VW553-START
+gd32vw553_start.vid.0=0x28E9
+gd32vw553_start.pid.0=0x0189
 
-gd32vw553k_start.build.mcu=gd32vw55x
-gd32vw553k_start.build.f_cpu=160000000L
-gd32vw553k_start.build.board=GD32VW553K_START
-gd32vw553k_start.build.core=arduino
-gd32vw553k_start.build.variant=gd32vw553k_start
-gd32vw553k_start.build.system.path=system/gd32vw55x
-gd32vw553k_start.build.extra_flags=-DGD32VW553K_START -DBOARD_START -DUSE_STDPERIPH_DRIVER
-gd32vw553k_start.build.ldscript=ldscript.ld
-gd32vw553k_start.upload.tool=openocd
-gd32vw553k_start.upload.maximum_size=4194304
-gd32vw553k_start.upload.maximum_data_size=294912
+gd32vw553_start.build.mcu=gd32vw55x
+gd32vw553_start.build.f_cpu=160000000L
+gd32vw553_start.build.board=GD32VW553_START
+gd32vw553_start.build.core=arduino
+gd32vw553_start.build.variant=gd32vw553_start
+gd32vw553_start.build.system.path=system/gd32vw55x
+gd32vw553_start.build.extra_flags=-DGD32VW553_START -DBOARD_START -DUSE_STDPERIPH_DRIVER
+gd32vw553_start.build.ldscript=ldscript.ld
+gd32vw553_start.upload.tool=openocd
+gd32vw553_start.upload.maximum_size=4194304
+gd32vw553_start.upload.maximum_data_size=294912
 
 # Flash menu for K-START
-gd32vw553k_start.menu.flash.4m.build.extra_flags=-DFLASH_4M
-gd32vw553k_start.menu.flash.4m.build.ldscript=ldscript.ld
-gd32vw553k_start.menu.flash.4m.upload.maximum_size=4194304
+gd32vw553_start.menu.flash.4m.build.extra_flags=-DFLASH_4M
+gd32vw553_start.menu.flash.4m.build.ldscript=ldscript.ld
+gd32vw553_start.menu.flash.4m.upload.maximum_size=4194304
 
-gd32vw553k_start.menu.flash.2m.build.extra_flags=-DFLASH_2M
-gd32vw553k_start.menu.flash.2m.build.ldscript=ldscript_2m.ld
-gd32vw553k_start.menu.flash.2m.upload.maximum_size=2097152
+gd32vw553_start.menu.flash.2m.build.extra_flags=-DFLASH_2M
+gd32vw553_start.menu.flash.2m.build.ldscript=ldscript_2m.ld
+gd32vw553_start.menu.flash.2m.upload.maximum_size=2097152
 
 # ------------------------------------------------------------
-# GD32VW553H-START - QFN40, 28 GPIOs - H version
+# GD32VW553-EVAL - QFN40, 28 GPIOs - H version
 # ------------------------------------------------------------
-gd32vw553h_start.name=GD32VW553H-START
-gd32vw553h_start.vid.0=0x28E9
-gd32vw553h_start.pid.0=0x018A
+gd32vw553_eval.name=GD32VW553H-EVAL
+gd32vw553_eval.vid.0=0x28E9
+gd32vw553_eval.pid.0=0x018A
 
-gd32vw553h_start.build.mcu=gd32vw55x
-gd32vw553h_start.build.f_cpu=160000000L
-gd32vw553h_start.build.board=GD32VW553H_START
-gd32vw553h_start.build.core=arduino
-gd32vw553h_start.build.variant=gd32vw553h_start
-gd32vw553h_start.build.system.path=system/gd32vw55x
-gd32vw553h_start.build.extra_flags=-DGD32VW553H_START -DBOARD_START -DUSE_STDPERIPH_DRIVER
-gd32vw553h_start.build.ldscript=ldscript.ld
-gd32vw553h_start.upload.tool=openocd
-gd32vw553h_start.upload.maximum_size=4194304
-gd32vw553h_start.upload.maximum_data_size=294912
+gd32vw553_eval.build.mcu=gd32vw55x
+gd32vw553_eval.build.f_cpu=160000000L
+gd32vw553_eval.build.board=GD32VW553_EVAL
+gd32vw553_eval.build.core=arduino
+gd32vw553_eval.build.variant=gd32vw553_eval
+gd32vw553_eval.build.system.path=system/gd32vw55x
+gd32vw553_eval.build.extra_flags=-DGD32VW553_EVAL -DBOARD_EVAL -DUSE_STDPERIPH_DRIVER
+gd32vw553_eval.build.ldscript=ldscript.ld
+gd32vw553_eval.upload.tool=openocd
+gd32vw553_eval.upload.maximum_size=4194304
+gd32vw553_eval.upload.maximum_data_size=294912
 
-# Flash menu for H-START
-gd32vw553h_start.menu.flash.4m.build.extra_flags=-DFLASH_4M
-gd32vw553h_start.menu.flash.4m.build.ldscript=ldscript.ld
-gd32vw553h_start.menu.flash.4m.upload.maximum_size=4194304
+# Flash menu for H-EVAL
+gd32vw553_eval.menu.flash.4m.build.extra_flags=-DFLASH_4M
+gd32vw553_eval.menu.flash.4m.build.ldscript=ldscript.ld
+gd32vw553_eval.menu.flash.4m.upload.maximum_size=4194304
 
-gd32vw553h_start.menu.flash.2m.build.extra_flags=-DFLASH_2M
-gd32vw553h_start.menu.flash.2m.build.ldscript=ldscript_2m.ld
-gd32vw553h_start.menu.flash.2m.upload.maximum_size=2097152
+gd32vw553_eval.menu.flash.2m.build.extra_flags=-DFLASH_2M
+gd32vw553_eval.menu.flash.2m.build.ldscript=ldscript_2m.ld
+gd32vw553_eval.menu.flash.2m.upload.maximum_size=2097152
