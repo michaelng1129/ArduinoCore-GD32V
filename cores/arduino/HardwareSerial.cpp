@@ -64,7 +64,7 @@ static void arduinoSerialRxCallback(uint32_t uart_port)
 HardwareSerial Serial;
 HardwareSerial::HardwareSerial() {}
 
-void HardwareSerial::begin(unsigned long baud) {
+void HardwareSerial::begin(unsigned long baud, uint8_t config) {
     rcu_periph_clock_enable(ARDUINO_SERIAL_TX_PORT == GPIOA ? RCU_GPIOA :
                             ARDUINO_SERIAL_TX_PORT == GPIOB ? RCU_GPIOB : RCU_GPIOC);
     if (ARDUINO_SERIAL_RX_PORT != ARDUINO_SERIAL_TX_PORT) {
@@ -84,11 +84,43 @@ void HardwareSerial::begin(unsigned long baud) {
     gpio_output_options_set(ARDUINO_SERIAL_RX_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_25MHZ,
                             ARDUINO_SERIAL_RX_PIN);
 
+    // Decode the Arduino frame-format code (see HardwareSerial.h SERIAL_* defines).
+    // Data bits: (config & 0x06) >> 1 -> 0=5, 1=6, 2=7, 3=8.
+    // The GD32 USART only has 8/9-bit word length: 8 data bits use WL_8BIT
+    // (no parity) or WL_9BIT (with parity, 8 data + 1 parity); 7 data bits
+    // with parity use WL_8BIT (7 data + 1 parity). 5/6 data bits and 7N1
+    // are not supported by the hardware and fall back to 8N1.
+    uint32_t wordLength = USART_WL_8BIT;
+    uint32_t parity = USART_PM_NONE;
+    switch (config & 0x30) {
+        case 0x20: parity = USART_PM_EVEN; break;
+        case 0x30: parity = USART_PM_ODD; break;
+        default:   parity = USART_PM_NONE; break;
+    }
+    switch ((config & 0x06) >> 1) {
+        case 3:  // 8 data bits
+            wordLength = (parity == USART_PM_NONE) ? USART_WL_8BIT : USART_WL_9BIT;
+            break;
+        case 2:  // 7 data bits
+            if (parity == USART_PM_NONE) {
+                // No 7N1 mode in hardware; fall back to 8N1.
+                wordLength = USART_WL_8BIT;
+            } else {
+                wordLength = USART_WL_8BIT;  // 7 data + 1 parity
+            }
+            break;
+        default:  // 5/6 data bits not supported; fall back to 8N1
+            wordLength = USART_WL_8BIT;
+            parity = USART_PM_NONE;
+            break;
+    }
+    uint32_t stopBits = (config & 0x08) ? USART_STB_2BIT : USART_STB_1BIT;
+
     usart_deinit(ARDUINO_SERIAL_USART);
     usart_baudrate_set(ARDUINO_SERIAL_USART, (uint32_t)baud);
-    usart_word_length_set(ARDUINO_SERIAL_USART, USART_WL_8BIT);
-    usart_stop_bit_set(ARDUINO_SERIAL_USART, USART_STB_1BIT);
-    usart_parity_config(ARDUINO_SERIAL_USART, USART_PM_NONE);
+    usart_word_length_set(ARDUINO_SERIAL_USART, wordLength);
+    usart_stop_bit_set(ARDUINO_SERIAL_USART, stopBits);
+    usart_parity_config(ARDUINO_SERIAL_USART, parity);
     usart_transmit_config(ARDUINO_SERIAL_USART, USART_TRANSMIT_ENABLE);
     usart_receive_config(ARDUINO_SERIAL_USART, USART_RECEIVE_ENABLE);
     usart_interrupt_enable(ARDUINO_SERIAL_USART, USART_INT_RBNE);
@@ -144,4 +176,24 @@ size_t HardwareSerial::write(uint8_t value) {
     while (!usart_flag_get(ARDUINO_SERIAL_USART, USART_FLAG_TBE)) {}
     usart_data_transmit(ARDUINO_SERIAL_USART, value);
     return 1;
+}
+
+size_t HardwareSerial::write(const uint8_t *buffer, size_t size) {
+    size_t n = 0;
+    while (n < size) {
+        n += write(buffer[n]);
+    }
+    return n;
+}
+
+int HardwareSerial::availableForWrite() {
+    // No TX buffering yet; the single-byte hardware register is
+    // effectively always available (write() blocks until TBE).
+    return 1;
+}
+
+HardwareSerial::operator bool() {
+    // Hardware UART has no meaningful "not ready" state for Arduino
+    // sketches; always report ready for interface compatibility.
+    return true;
 }
