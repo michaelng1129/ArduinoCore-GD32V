@@ -161,6 +161,7 @@ static inline word makeWord(unsigned int high, unsigned int low)
 #include "WMath.h"
 #include "WString.h"
 #include "Print.h"
+#include "Stream.h"
 #include "HardwareSerial.h"
 #endif
 

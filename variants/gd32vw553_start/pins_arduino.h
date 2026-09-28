@@ -75,6 +75,17 @@
 #define PIN_SERIAL1_TX              PIN_SERIAL_TX
 #define PIN_SERIAL1_RX              PIN_SERIAL_RX
 
+// HardwareSerial peripheral configuration (used by cores/arduino/HardwareSerial.cpp)
+#define ARDUINO_SERIAL_USART        UART2
+#define ARDUINO_SERIAL_IRQn         UART2_IRQn
+#define ARDUINO_SERIAL_RCU          RCU_UART2
+#define ARDUINO_SERIAL_TX_PORT      GPIOA
+#define ARDUINO_SERIAL_TX_PIN       GPIO_PIN_6
+#define ARDUINO_SERIAL_TX_AF        GPIO_AF_10
+#define ARDUINO_SERIAL_RX_PORT      GPIOA
+#define ARDUINO_SERIAL_RX_PIN       GPIO_PIN_7
+#define ARDUINO_SERIAL_RX_AF        GPIO_AF_8
+
 // SPI0 default pins (GD32VW553-MINI Datasheet Table 4-1).
 // The Arduino SPI library is not implemented yet; these defines document
 // the intended default routing for when it lands.

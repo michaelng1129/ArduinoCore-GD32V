@@ -4,28 +4,26 @@
 #include "gd32vw55x_rcu.h"
 #include "gd32vw55x_usart.h"
 #include "uart.h"
+#include "pins_arduino.h"
 
-// Arduino Serial on the GD32VW553K-START is UART2 on PA6 (TX) / PA7 (RX),
-// wired to the on-board GD-Link USB serial (AN154 Figure 1-2).
-// UART2 pinmux (GD32VW553-MINI Datasheet Table 4-1, MSDK uart_config.h):
-//   PA6 = UART2_TX, alternate function AF10
-//   PA7 = UART2_RX, alternate function AF8
+// Arduino Serial UART is board-specific, defined in the variant's
+// pins_arduino.h via ARDUINO_SERIAL_* defines:
+//   ARDUINO_SERIAL_USART   - USART0, UART1, or UART2
+//   ARDUINO_SERIAL_IRQn    - USART0_IRQn, UART1_IRQn, or UART2_IRQn
+//   ARDUINO_SERIAL_TX_PORT - GPIOA/GPIOB/GPIOC
+//   ARDUINO_SERIAL_TX_PIN  - GPIO_PIN_x
+//   ARDUINO_SERIAL_TX_AF   - GPIO_AF_x
+//   ARDUINO_SERIAL_RX_PORT / ARDUINO_SERIAL_RX_PIN / ARDUINO_SERIAL_RX_AF
+//   ARDUINO_SERIAL_RCU     - RCU_USART0 / RCU_UART1 / RCU_UART2
 //
-// NOTE: the vendor SDK log output (LOG_UART) also uses UART2 on START, so
-// SDK log messages and Serial output share the same USB serial port.
-// Serial.begin() takes over the peripheral configuration; the SDK log
-// keeps working on top of it (it polls the TX register directly).
-//
-// RX uses the SDK interrupt framework: the SDK already defines
-// UART2_IRQHandler (gd32vw55x_it.c), which dispatches to a callback
+// RX uses the SDK interrupt framework: the SDK already defines the
+// USARTx_IRQHandler (gd32vw55x_it.c), which dispatches to a callback
 // registered with uart_irq_callback_register(). We must NOT define our own
-// UART2_IRQHandler - that would be a duplicate symbol at link time.
+// IRQ handler - that would be a duplicate symbol at link time.
 
-#define ARDUINO_SERIAL_USART UART2
-#define ARDUINO_SERIAL_TX_PIN GPIO_PIN_6
-#define ARDUINO_SERIAL_TX_AF GPIO_AF_10
-#define ARDUINO_SERIAL_RX_PIN GPIO_PIN_7
-#define ARDUINO_SERIAL_RX_AF GPIO_AF_8
+#ifndef ARDUINO_SERIAL_USART
+#error "Variant pins_arduino.h must define ARDUINO_SERIAL_USART"
+#endif
 
 // RX ring buffer. Written by the SDK-dispatched RX callback (in interrupt
 // context), read by the Arduino task. Head is advanced only by the ISR,
@@ -67,16 +65,24 @@ HardwareSerial Serial;
 HardwareSerial::HardwareSerial() {}
 
 void HardwareSerial::begin(unsigned long baud) {
-    rcu_periph_clock_enable(RCU_GPIOA);
-    rcu_periph_clock_enable(RCU_UART2);
+    rcu_periph_clock_enable(ARDUINO_SERIAL_TX_PORT == GPIOA ? RCU_GPIOA :
+                            ARDUINO_SERIAL_TX_PORT == GPIOB ? RCU_GPIOB : RCU_GPIOC);
+    if (ARDUINO_SERIAL_RX_PORT != ARDUINO_SERIAL_TX_PORT) {
+        rcu_periph_clock_enable(ARDUINO_SERIAL_RX_PORT == GPIOA ? RCU_GPIOA :
+                                ARDUINO_SERIAL_RX_PORT == GPIOB ? RCU_GPIOB : RCU_GPIOC);
+    }
+    rcu_periph_clock_enable(ARDUINO_SERIAL_RCU);
 
-    // TX: PA6, AF10, push-pull. RX: PA7, AF8, pull-up.
-    gpio_af_set(GPIOA, ARDUINO_SERIAL_TX_AF, ARDUINO_SERIAL_TX_PIN);
-    gpio_af_set(GPIOA, ARDUINO_SERIAL_RX_AF, ARDUINO_SERIAL_RX_PIN);
-    gpio_mode_set(GPIOA, GPIO_MODE_AF, GPIO_PUPD_PULLUP,
-                  ARDUINO_SERIAL_TX_PIN | ARDUINO_SERIAL_RX_PIN);
-    gpio_output_options_set(GPIOA, GPIO_OTYPE_PP, GPIO_OSPEED_25MHZ,
-                            ARDUINO_SERIAL_TX_PIN | ARDUINO_SERIAL_RX_PIN);
+    gpio_af_set(ARDUINO_SERIAL_TX_PORT, ARDUINO_SERIAL_TX_AF, ARDUINO_SERIAL_TX_PIN);
+    gpio_af_set(ARDUINO_SERIAL_RX_PORT, ARDUINO_SERIAL_RX_AF, ARDUINO_SERIAL_RX_PIN);
+    gpio_mode_set(ARDUINO_SERIAL_TX_PORT, GPIO_MODE_AF, GPIO_PUPD_PULLUP,
+                  ARDUINO_SERIAL_TX_PIN);
+    gpio_mode_set(ARDUINO_SERIAL_RX_PORT, GPIO_MODE_AF, GPIO_PUPD_PULLUP,
+                  ARDUINO_SERIAL_RX_PIN);
+    gpio_output_options_set(ARDUINO_SERIAL_TX_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_25MHZ,
+                            ARDUINO_SERIAL_TX_PIN);
+    gpio_output_options_set(ARDUINO_SERIAL_RX_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_25MHZ,
+                            ARDUINO_SERIAL_RX_PIN);
 
     usart_deinit(ARDUINO_SERIAL_USART);
     usart_baudrate_set(ARDUINO_SERIAL_USART, (uint32_t)baud);
@@ -88,18 +94,18 @@ void HardwareSerial::begin(unsigned long baud) {
     usart_interrupt_enable(ARDUINO_SERIAL_USART, USART_INT_RBNE);
     usart_enable(ARDUINO_SERIAL_USART);
 
-    // Fresh buffer, hook the SDK RX dispatcher, then route the UART2
+    // Fresh buffer, hook the SDK RX dispatcher, then route the UART
     // interrupt to the CPU. Level 1 is above the ECLIC threshold (0)
     // set up by the SDK.
     g_rxHead = 0U;
     g_rxTail = 0U;
     uart_irq_callback_register(ARDUINO_SERIAL_USART, arduinoSerialRxCallback);
-    ECLIC_SetLevelIRQ(UART2_IRQn, 1);
-    ECLIC_EnableIRQ(UART2_IRQn);
+    ECLIC_SetLevelIRQ(ARDUINO_SERIAL_IRQn, 1);
+    ECLIC_EnableIRQ(ARDUINO_SERIAL_IRQn);
 }
 
 void HardwareSerial::end() {
-    ECLIC_DisableIRQ(UART2_IRQn);
+    ECLIC_DisableIRQ(ARDUINO_SERIAL_IRQn);
     uart_irq_callback_unregister(ARDUINO_SERIAL_USART);
     usart_interrupt_disable(ARDUINO_SERIAL_USART, USART_INT_RBNE);
     usart_disable(ARDUINO_SERIAL_USART);

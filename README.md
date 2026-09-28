@@ -7,6 +7,7 @@ Arduino core for GigaDevice GD32VW553 (RISC-V, Wi-Fi 6 + BLE 5.3).
 | 板子 | 模組 | Flash | 說明 |
 |------|------|-------|------|
 | GD32VW553-START | GD32VW553-MINI-I/E (GD32VW553KMQ, QFN32) | 4MB | START V5.0 底板 + MINI 模組 |
+| JLC-GD32V | GD32VW553H (QFN40) | 4MB | 立创 LCKFB 核心板，USB-C |
 
 ## GD32VW553-START 接腳
 
@@ -62,6 +63,36 @@ Arduino core for GigaDevice GD32VW553 (RISC-V, Wi-Fi 6 + BLE 5.3).
 ### analogWrite (PWM)
 
 只有 pin 0（PA0，TIMER1_CH0）支援 `analogWrite`。
+
+## JLC-GD32V 接腳
+
+接腳定義依據立创 pinout diagram（引脚接口图）。Arduino pin 0-13 為右排針
+（上到下），14-23 為左排針（上到下，僅 GPIO）。
+
+| Arduino | GPIO | 備註 |
+|---------|------|------|
+| 0-4 | PA1-PA5 | A1-A5 (ADC_IN1-5) |
+| 5 | PA0 | A0, PWM (TIMER1_CH0), KEY 按鍵（待確認） |
+| 6-7 | PA6-PA7 | A6-A7 (ADC_IN6-7) |
+| 8 | PB0 | A8 (ADC_IN8) |
+| 9 | PB1 | BOOT1，影響開機模式，慎用 |
+| 10-13 | PB2, PB11-PB13 | |
+| 14 | PC13 | LED_BUILTIN（待確認） |
+| 15-17 | PA15, PB4, PB3 | JTAG 腳 |
+| 18-19 | PA12-PA11 | |
+| 20-21 | PA10-PA9 | Serial (USART0_RX/TX) |
+| 22-23 | PA8, PB15 | |
+
+**待確認事項**（根據圖片推測，請對照原理圖修正）：
+- `LED_BUILTIN` (PC13)：使用者 LED 引腳未在圖中明確標示
+- `PIN_BUTTON` (PA0)：KEY 按鍵引腳未知
+- `Serial` 使用 USART0 (PA9/PA10)：假設 USB-UART 橋接器接在此，如 USB serial 無輸出請檢查原理圖
+
+### JLC-GD32V 燒錄
+
+JLC-GD32V 的 USB-C 經由板載 USB-UART 橋接器連到 USART0，同時也是 `Serial`。
+燒錄位址同樣是 `0x0800A000`（OTA slot）。注意：此板無 GD-Link，需使用
+USB-UART 或其他方式燒錄（待確認板子的燒錄方式）。
 
 ## 燒錄
 

@@ -61,3 +61,29 @@ gd32vw553_eval.menu.flash.4m.upload.maximum_size=4153344
 gd32vw553_eval.menu.flash.2m.build.extra_flags=-DGD32VW553_EVAL -DBOARD_EVAL -DCONFIG_BOARD=2 -DCONFIG_ARDUINO_CORE -DUSE_STDPERIPH_DRIVER -DFLASH_2M
 gd32vw553_eval.menu.flash.2m.build.ldscript=ldscript_2m.ld
 gd32vw553_eval.menu.flash.2m.upload.maximum_size=2056192
+
+# ------------------------------------------------------------
+# JLC-GD32V - LCKFB GD32VW553 core board
+# (GD32VW553H, QFN40, 4MB flash, 320KB SRAM)
+# 24 GPIOs on 2x20 pin headers, USB-C with on-board USB-UART bridge.
+# Pinout: see variants/jlc_gd32v/pins_arduino.h
+# NOTE: LED pin, KEY button pin, and USB-UART wiring are best-effort
+# guesses from the vendor pinout diagram - verify against the schematic.
+# ------------------------------------------------------------
+jlc_gd32v.name=JLC-GD32V
+jlc_gd32v.vid.0=0x28E9
+jlc_gd32v.pid.0=0x018B
+
+jlc_gd32v.build.mcu=gd32vw55x
+jlc_gd32v.build.f_cpu=160000000L
+jlc_gd32v.build.board=JLC_GD32V
+jlc_gd32v.build.core=arduino
+jlc_gd32v.build.variant=jlc_gd32v
+jlc_gd32v.build.system.path={runtime.platform.path}/system/gd32vw55x/sdk
+jlc_gd32v.build.extra_flags=-DGD32VW553_JLC -DBOARD_JLC_GD32V -DCONFIG_BOARD=3 -DCONFIG_ARDUINO_CORE -DUSE_STDPERIPH_DRIVER
+jlc_gd32v.build.ldscript=ldscript.ld
+jlc_gd32v.upload.tool=openocd
+jlc_gd32v.upload.maximum_size=4153344
+jlc_gd32v.upload.maximum_data_size=294400
+
+# The JLC-GD32V uses the full 4MB GD32VW553H; no flash-size menu.
