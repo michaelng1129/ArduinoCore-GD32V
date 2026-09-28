@@ -48,8 +48,14 @@ recipe.size.regex=^(?:\.text|\.data|\.rodata|\.bss)\s+[0-9]+
 recipe.size.regex.data=^\.data\s+([0-9]+)
 recipe.size.regex.bss=^\.bss\s+([0-9]+)
 
-# OpenOCD upload
+# OpenOCD upload (requires the GigaDevice OpenOCD fork - stock OpenOCD has no
+# gd32vw55x flash driver). The vendor GD-Link config is shipped in this repo.
+# The Arduino app is linked at 0x0800A000 (OTA slot, see variants/*/ldscript.ld
+# and AN154 Table 6-1), so the binary is programmed there, NOT at 0x08000000.
+# The MBL bootloader at 0x08000000 must already be on the board (it is on
+# stock START boards); it boots the app from the OTA slot.
 tools.openocd.path={runtime.tools.openocd.path}/bin/
 tools.openocd.cmd.path={path}/openocd
+tools.openocd.cfg.path={runtime.platform.path}/system/gd32vw55x/sdk/MSDK/projects/eclipse/msdk/openocd_gdlink.cfg
 tools.openocd.upload.params.verbose=-d1
-tools.openocd.upload.pattern="{cmd.path}" {upload.params.verbose} -f interface/cmsis-dap.cfg -f target/gd32vw55x.cfg -c "program {build.path}/{build.project_name}.bin verify reset exit 0x08000000"
+tools.openocd.upload.pattern="{cmd.path}" {upload.params.verbose} -f "{tools.openocd.cfg.path}" -c "program {build.path}/{build.project_name}.bin verify reset exit 0x0800A000"

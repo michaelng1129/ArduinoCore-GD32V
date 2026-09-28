@@ -11,7 +11,9 @@ menu.flash.2m=2M
 menu.flash.2m.build.flash_size=2097152
 
 # ------------------------------------------------------------
-# GD32VW553-START - QFN32, 21 GPIOs - K version
+# GD32VW553-START - START V5.0 baseboard + GD32VW553-MINI module
+# (GD32VW553KMQ, QFN32, 4MB flash, 320KB SRAM)
+# Pinout: see variants/gd32vw553_start/pins_arduino.h (AN154 Table 1-1/1-2)
 # ------------------------------------------------------------
 gd32vw553_start.name=GD32VW553-START
 gd32vw553_start.vid.0=0x28E9
@@ -29,14 +31,8 @@ gd32vw553_start.upload.tool=openocd
 gd32vw553_start.upload.maximum_size=4153344
 gd32vw553_start.upload.maximum_data_size=294400
 
-# Flash menu for K-START
-gd32vw553_start.menu.flash.4m.build.extra_flags=-DGD32VW553_START -DBOARD_START -DCONFIG_BOARD=1 -DCONFIG_ARDUINO_CORE -DUSE_STDPERIPH_DRIVER -DFLASH_4M
-gd32vw553_start.menu.flash.4m.build.ldscript=ldscript.ld
-gd32vw553_start.menu.flash.4m.upload.maximum_size=4153344
-
-gd32vw553_start.menu.flash.2m.build.extra_flags=-DGD32VW553_START -DBOARD_START -DCONFIG_BOARD=1 -DCONFIG_ARDUINO_CORE -DUSE_STDPERIPH_DRIVER -DFLASH_2M
-gd32vw553_start.menu.flash.2m.build.ldscript=ldscript_2m.ld
-gd32vw553_start.menu.flash.2m.upload.maximum_size=2056192
+# The START board's GD32VW553-MINI module has a fixed 4MB flash; there is no
+# 2MB variant, so no flash-size menu is offered for this board.
 
 # ------------------------------------------------------------
 # GD32VW553-EVAL - QFN40, 28 GPIOs - H version
