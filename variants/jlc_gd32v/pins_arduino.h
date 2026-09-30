@@ -2,8 +2,8 @@
 //
 // Board: 立创 LCKFB GD32VW553 核心板 (GD32VW553H, QFN40, 4MB Flash)
 // Pinout derived from the vendor pinout diagram (引脚接口图).
-// *** Several assignments are best-effort guesses - verify against the
-// *** schematic and correct them (marked UNCONFIRMED below).
+// Serial/UART0 pins (PA8=RX, PB15=TX) and the PC13 LED are confirmed
+// against the schematic. The KEY button pin is still a guess.
 //
 // Arduino pin numbering follows the physical header layout:
 //
@@ -18,11 +18,11 @@
 //   7 - PA7
 //
 // Left header (top to bottom, GPIO only):
-//  14 - PC13          19 - PA11
-//  15 - PA15          20 - PA10 (USART0_RX)
-//  16 - PB4           21 - PA9  (USART0_TX)
-//  17 - PB3           22 - PA8
-//  18 - PA12          23 - PB15
+//  14 - PC13 (LED)    19 - PA11
+//  15 - PA15          20 - PA10
+//  16 - PB4           21 - PA9
+//  17 - PB3           22 - PA8  (USART0_RX)
+//  18 - PA12          23 - PB15 (USART0_TX)
 //
 // (BOOT0, RESET, 3V3, 5V, GND are not mapped as Arduino pins.)
 
@@ -39,33 +39,35 @@
 #define NUM_ANALOG_INPUTS           9
 
 // --- LEDs ---
-// UNCONFIRMED: user LED pin inferred from board photos; verify against schematic.
-#define LED_BUILTIN                 14  // PC13 (guess)
+// Confirmed: PC13 is wired to an on-board LED (per schematic).
+#define LED_BUILTIN                 14  // PC13
 #define LED_BUILTIN_ACTIVE          HIGH
 
 // --- Buttons ---
-// UNCONFIRMED: KEY button pin unknown from the pinout diagram; PA0 is a guess.
-#define PIN_BUTTON                  5   // PA0 (guess)
+// Confirmed: SW2 (KEY) on PA0/WKUP0, active HIGH (10kΩ pulldown to GND).
+#define PIN_BUTTON                  5   // PA0
+#define PIN_BOOT0                   255 // PC8, not on Arduino header (BOOT0 button SW1)
 
 // --- Serial (USB) ---
-// UNCONFIRMED: assumes the on-board USB-UART bridge is wired to USART0.
-// If USB serial does not work, check the schematic for the actual UART.
-#define PIN_SERIAL_TX               21  // PA9 (USART0_TX)
-#define PIN_SERIAL_RX               20  // PA10 (USART0_RX)
+// Confirmed: the on-board USB-UART bridge is wired to USART0
+// (PA8=RX, PB15=TX).
+#define PIN_SERIAL_TX               23  // PB15 (USART0_TX)
+#define PIN_SERIAL_RX               22  // PA8 (USART0_RX)
 #define PIN_SERIAL1_TX              PIN_SERIAL_TX
 #define PIN_SERIAL1_RX              PIN_SERIAL_RX
 
 // HardwareSerial peripheral configuration (used by cores/arduino/HardwareSerial.cpp)
-// USART0 on PA9/PA10, alternate function AF7 (MSDK uart.h).
+// USART0: TX on PB15 (AF8), RX on PA8 (AF2). Verified against the
+// GD32VW553xx Datasheet AF mapping tables (pp. 24-25).
 #define ARDUINO_SERIAL_USART        USART0
 #define ARDUINO_SERIAL_IRQn         USART0_IRQn
 #define ARDUINO_SERIAL_RCU          RCU_USART0
-#define ARDUINO_SERIAL_TX_PORT      GPIOA
-#define ARDUINO_SERIAL_TX_PIN       GPIO_PIN_9
-#define ARDUINO_SERIAL_TX_AF        GPIO_AF_7
+#define ARDUINO_SERIAL_TX_PORT      GPIOB
+#define ARDUINO_SERIAL_TX_PIN       GPIO_PIN_15
+#define ARDUINO_SERIAL_TX_AF        GPIO_AF_8
 #define ARDUINO_SERIAL_RX_PORT      GPIOA
-#define ARDUINO_SERIAL_RX_PIN       GPIO_PIN_10
-#define ARDUINO_SERIAL_RX_AF        GPIO_AF_7
+#define ARDUINO_SERIAL_RX_PIN       GPIO_PIN_8
+#define ARDUINO_SERIAL_RX_AF        GPIO_AF_2
 
 // --- SPI0 default pins (GD32VW553H Datasheet pinmux) ---
 // The Arduino SPI library is not implemented yet; these defines document
@@ -83,8 +85,6 @@
 
 // --- Analog ---
 // A0..A8 map to ADC_IN0..ADC_IN8 (PA0..PA7, PB0).
-// PA6/PA7 are also the Serial... no, they are not; PA9/PA10 are Serial here,
-// so all of PA0..PA7 are free for analog.
 #define A0                          5   // PA0 (ADC_IN0)
 #define A1                          0   // PA1 (ADC_IN1)
 #define A2                          1   // PA2 (ADC_IN2)

@@ -64,15 +64,20 @@ gd32vw553_eval.menu.flash.2m.upload.maximum_size=2056192
 
 # ------------------------------------------------------------
 # JLC-GD32V - LCKFB GD32VW553 core board
-# (GD32VW553H, QFN40, 4MB flash, 320KB SRAM)
+# (GD32VW553HMQ6, QFN40, 4MB flash, 320KB SRAM)
 # 24 GPIOs on 2x20 pin headers, USB-C with on-board USB-UART bridge.
 # Pinout: see variants/jlc_gd32v/pins_arduino.h
-# NOTE: LED pin, KEY button pin, and USB-UART wiring are best-effort
-# guesses from the vendor pinout diagram - verify against the schematic.
+# Hardware verified against vendor schematic (2025-06-09, 嘉立创EDA):
+#  - Serial: USART0, PA8=RX (AF2), PB15=TX (AF8), via USB-UART bridge (U2)
+#  - LED1: PC13, active HIGH (15kΩ to GND)
+#  - KEY (SW2): PA0/WKUP0, active HIGH (10kΩ pulldown)
+#  - BOOT0: PC8 (button to 3V3), BOOT1: PB1 (10kΩ to GND)
+#  - 40MHz HXTAL, 32.768kHz LXTAL, SWD header (PA13/PA14)
+# NOTE: No native USB on this board (USB-C goes to the UART bridge only),
+# so no vid/pid is defined. Upload via serial (BOOT0+NRST for ROM
+# bootloader) or SWD.
 # ------------------------------------------------------------
 jlc_gd32v.name=JLC-GD32V
-jlc_gd32v.vid.0=0x28E9
-jlc_gd32v.pid.0=0x018B
 
 jlc_gd32v.build.mcu=gd32vw55x
 jlc_gd32v.build.f_cpu=160000000L

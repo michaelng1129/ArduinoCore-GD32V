@@ -6,7 +6,9 @@ __heap_size = DEFINED(__heap_size) ? __heap_size : 16K;
 
 MEMORY
 {
-    /* Must keep MBL offset - official FLASH layout, required for OTA and secure boot */
+    /* App at 0x0800A000 (RE_IMG_0_OFFSET): MBL factory bootloader at
+       0x08000000 validates the image header and jumps here. Do NOT
+       overwrite 0x08000000. */
     flash (rxai!w) : ORIGIN = 0x0800A000, LENGTH = 0x3F6000
     /* SRAM layout: 0x20000200 reserved for ROM, 288K total */
     ram   (wxa!ri) : ORIGIN = 0x20000200, LENGTH = 0x47E00

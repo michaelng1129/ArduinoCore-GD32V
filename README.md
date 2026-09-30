@@ -66,33 +66,39 @@ Arduino core for GigaDevice GD32VW553 (RISC-V, Wi-Fi 6 + BLE 5.3).
 
 ## JLC-GD32V 接腳
 
-接腳定義依據立创 pinout diagram（引脚接口图）。Arduino pin 0-13 為右排針
+接腳定義已對照立创官方原理圖（2025-06-09，嘉立创EDA）確認。Arduino pin 0-13 為右排針
 （上到下），14-23 為左排針（上到下，僅 GPIO）。
 
 | Arduino | GPIO | 備註 |
 |---------|------|------|
 | 0-4 | PA1-PA5 | A1-A5 (ADC_IN1-5) |
-| 5 | PA0 | A0, PWM (TIMER1_CH0), KEY 按鍵（待確認） |
+| 5 | PA0 | A0, PWM (TIMER1_CH0), KEY 按鍵（SW2，active HIGH） |
 | 6-7 | PA6-PA7 | A6-A7 (ADC_IN6-7) |
 | 8 | PB0 | A8 (ADC_IN8) |
 | 9 | PB1 | BOOT1，影響開機模式，慎用 |
 | 10-13 | PB2, PB11-PB13 | |
-| 14 | PC13 | LED_BUILTIN（待確認） |
-| 15-17 | PA15, PB4, PB3 | JTAG 腳 |
-| 18-19 | PA12-PA11 | |
-| 20-21 | PA10-PA9 | Serial (USART0_RX/TX) |
-| 22-23 | PA8, PB15 | |
+| 14 | PC13 | LED_BUILTIN，active HIGH |
+| 15-17 | PA15, PB4, PB3 | JTAG/SWD 腳（PA13=SWDIO, PA14=SWCLK） |
+| 18-21 | PA12, PA11, PA10, PA9 | |
+| 22-23 | PA8, PB15 | Serial (USART0_RX/TX) |
 
-**待確認事項**（根據圖片推測，請對照原理圖修正）：
-- `LED_BUILTIN` (PC13)：使用者 LED 引腳未在圖中明確標示
-- `PIN_BUTTON` (PA0)：KEY 按鍵引腳未知
-- `Serial` 使用 USART0 (PA9/PA10)：假設 USB-UART 橋接器接在此，如 USB serial 無輸出請檢查原理圖
+其他原理圖資訊：BOOT0 = PC8（按鍵 SW1），40MHz HXTAL + 32.768kHz LXTAL，
+Type-C 經 USB-UART 橋接器（U2）接 USART0（無 native USB）。
 
 ### JLC-GD32V 燒錄
 
-JLC-GD32V 的 USB-C 經由板載 USB-UART 橋接器連到 USART0，同時也是 `Serial`。
-燒錄位址同樣是 `0x0800A000`（OTA slot）。注意：此板無 GD-Link，需使用
-USB-UART 或其他方式燒錄（待確認板子的燒錄方式）。
+JLC-GD32V 的 USB-C 經由板載 USB-UART 橋接器連到 USART0（PA8=RX, PB15=TX），同時也是 `Serial`。
+
+App 燒錄到 `0x0800A000`（RE_IMG_0_OFFSET）。板載 MBL（`0x08000000`，出廠韌體）
+會驗證 image header 並跳轉到 app，**切勿覆寫 `0x08000000`**。
+
+**方式一：SWD（建議）**
+經排針/JTAG 座（PA13=SWDIO, PA14=SWCLK）用 OpenOCD 燒錄到 `0x0800A000`。
+需要 GigaDevice 的 OpenOCD fork。Arduino IDE 的上傳按鈕即走此流程。
+
+**方式二：UART ISP（經 USB-C）**
+按住 BOOT0（SW1）→ 按一下 NRST（SW3）→ 放開 BOOT0，進入 ROM bootloader，
+經 COM 口將 image 燒錄到 `0x0800A000`（注意指定位址，勿寫入 `0x08000000`）。
 
 ## 燒錄
 
@@ -101,8 +107,8 @@ USB-UART 或其他方式燒錄（待確認板子的燒錄方式）。
 Arduino IDE 會使用 repo 內的 vendor config：
 `system/gd32vw55x/sdk/MSDK/projects/eclipse/msdk/openocd_gdlink.cfg`
 
-App 燒錄到 `0x0800A000`（OTA slot，見 AN154）。板子上的 MBL（`0x08000000`）
-必須已存在（出廠即有），由它從 OTA slot 啟動 app。
+App 燒錄到 `0x0800A000`（RE_IMG_0_OFFSET）。板子上的 MBL（`0x08000000`，
+出廠韌體）會驗證 image 並跳轉到 app，**切勿覆寫 `0x08000000`**。
 
 手動燒錄：
 ```
