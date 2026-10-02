@@ -2,14 +2,11 @@
 name=GD32VW55x Arduino Core
 version=0.1.0
 
-# Toolchain
-# For manual install (no Boards Manager package yet), use the SDK-bundled
-# toolchain shipped alongside this repo (not in git - too large, keep it
-# next to your checkout):
-#   {runtime.platform.path}/system/gd32vw55x/sdk/tools/gd32vw55x_toolchain_windows/bin/
-# NOTE: that folder name is Windows-only. A cross-platform tools/ layout
-# can replace this when the Boards Manager package is set up.
-compiler.path={runtime.platform.path}/system/gd32vw55x/sdk/tools/gd32vw55x_toolchain_windows/bin/
+# Toolchain (installed via Boards Manager as the "riscv-nuclei-elf-gcc" tool;
+# see package_gd32vw55x_index.json). For a manual install without Boards
+# Manager, create a platform.local.txt next to this file overriding
+# compiler.path to point at your local toolchain.
+compiler.path={runtime.tools.riscv-nuclei-elf-gcc.path}/bin/
 compiler.c.cmd=riscv-nuclei-elf-gcc
 compiler.c.flags=-c -g -Os -march=rv32imac -mabi=ilp32 -mcmodel=medlow -mno-save-restore -msmall-data-limit=8 -ffunction-sections -fdata-sections -Wall -Wextra -Wno-unused-parameter -MMD
 compiler.cpp.cmd=riscv-nuclei-elf-g++
@@ -60,8 +57,11 @@ recipe.size.regex.bss=^\.bss\s+([0-9]+)
 # and AN154 Table 6-1), so the binary is programmed there, NOT at 0x08000000.
 # The MBL bootloader at 0x08000000 must already be on the board (it is on
 # stock START boards); it boots the app from the OTA slot.
-tools.openocd.path={runtime.platform.path}/tools/openocd
-tools.openocd.cmd.path={path}/bin/openocd
+# OpenOCD for upload (GigaDevice fork - stock OpenOCD has no gd32vw55x driver).
+# Installed via Boards Manager as the "openocd" tool; override in
+# platform.local.txt for manual installs.
+tools.openocd.path={runtime.tools.openocd.path}/bin/
+tools.openocd.cmd.path={path}/openocd
 tools.openocd.cfg.path={runtime.platform.path}/system/gd32vw55x/sdk/MSDK/projects/eclipse/msdk/openocd_gdlink.cfg
 tools.openocd.upload.params.verbose=-d1
 tools.openocd.upload.pattern="{cmd.path}" {upload.params.verbose} -f "{tools.openocd.cfg.path}" -c "program {build.path}/{build.project_name}.bin verify reset exit 0x0800A000"
